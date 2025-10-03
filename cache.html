@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Offline Installer</title>
+  <title>Offline Installer — Futuristic</title>
   <style>
     :root{--bg:#020116;--accent:#9b59ff;--accent2:#00f0ff;color:white}
     html,body{height:100%;margin:0;font-family:Orbitron,Roboto Mono,Arial;background:linear-gradient(180deg,#020116,var(--bg));display:grid;place-items:center;overflow:hidden}
@@ -29,13 +29,23 @@
   <script>
     const bar = document.getElementById('bar'), msg = document.getElementById('msg');
     document.getElementById('reload').addEventListener('click', ()=> location.reload());
-    if(navigator.serviceWorker){
-      navigator.serviceWorker.addEventListener('message', e=>{
-        if(!e.data) return;
-        if(e.data.type==='CACHE_PROGRESS'){ const pct = e.data.percent || 0; bar.style.width = pct + '%'; msg.textContent = e.data.message || (pct + '%'); }
-        if(e.data.type==='CACHE_COMPLETE'){ bar.style.width = '100%'; msg.textContent = 'Cache terpasang. Anda bisa menutup halaman ini.'; setTimeout(()=>location.replace('./index.html'),1500); }
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.addEventListener('message', e => {
+        if (!e.data) return;
+        if (e.data.type === 'CACHE_PROGRESS') {
+          const pct = e.data.percent || 0;
+          bar.style.width = pct + '%';
+          msg.textContent = e.data.message || (pct + '%');
+        }
+        if (e.data.type === 'CACHE_COMPLETE') {
+          bar.style.width = '100%';
+          msg.textContent = 'Cache terpasang. Anda bisa menutup halaman ini.';
+          setTimeout(()=> location.replace('./index.html'), 1200);
+        }
       });
-    } else { msg.textContent = 'Service Worker tidak tersedia pada browser ini.'; }
+    } else {
+      msg.textContent = 'Service Worker tidak tersedia pada browser ini.';
+    }
   </script>
 </body>
 </html>
