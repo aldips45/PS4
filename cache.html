@@ -1,56 +1,56 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Offline cache PS4 </title>
-<style>
-:root{--bg:#0b1220;--accent:#7c3aed;color:white}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#071026,var(--bg));display:grid;place-items:center}
-.box{max-width:720px;padding:28px;border-radius:14px;background:rgba(255,255,255,0.02);text-align:center}
-h1{margin:0 0 8px;font-size:24px}
-p{color:#a9b6c6}
-.progress{height:12px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden;margin-top:18px}
-.bar{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#3b82f6)}
-button{margin-top:18px;padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Offline exploite PS4</title>
+  <style>
+    :root{--bg:#071026;--accent:#7c3aed;color:white}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#051026,var(--bg));display:grid;place-items:center}
+    .box{max-width:720px;padding:28px;border-radius:14px;background:rgba(255,255,255,0.02);text-align:center}
+    h1{margin:0 0 8px;font-size:22px}
+    p{color:#a9b6c6}
+    .progress{height:12px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden;margin-top:18px}
+    .bar{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#3b82f6);transition:width .3s ease}
+    button{margin-top:16px;padding:9px 12px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer}
+    .muted{color:#9aa4b2;font-size:13px;margin-top:12px}
+  </style>
 </head>
 <body>
-<div class="box">
-<h1>Offline mode</h1>
-<p>Halaman ini disajikan dari cache jika jaringan tidak tersedia. Jika ini tampilan instalasi offline, tunggu hingga selesai.</p>
+  <div class="box" role="main">
+    <h1>Offline mode</h1>
+    <p>Halaman ini akan tampil saat jaringan terputus. Jika kamu meng-instal offline cache, tunggu hingga progres selesai.</p>
 
+    <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+    <div class="muted" id="msg">Menunggu...</div>
 
-<div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
-<div style="margin-top:10px;color:#9aa4b2;font-size:13px" id="msg">Menunggu...</div>
-<div>
-<button id="reload">Reload</button>
-</div>
-</div>
+    <div>
+      <button id="reload">Reload</button>
+    </div>
+  </div>
 
+  <script>
+    const bar = document.getElementById('bar');
+    const msg = document.getElementById('msg');
+    document.getElementById('reload').addEventListener('click', ()=> location.reload());
 
-<script>
-// Small UI to show progress events from the service worker
-const bar = document.getElementById('bar');
-const msg = document.getElementById('msg');
-const reload = document.getElementById('reload');
-
-
-navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', e=>{
-if (!e.data) return;
-if (e.data.type === 'CACHE_PROGRESS'){
-const pct = e.data.percent || 0;
-bar.style.width = pct + '%';
-msg.textContent = e.data.message || (pct + '%');
-}
-if (e.data.type === 'CACHE_COMPLETE'){
-bar.style.width = '100%';
-msg.textContent = 'Cache terpasang. Anda bisa menutup halaman ini.';
-}
-});
-
-
-reload.addEventListener('click', ()=>location.reload());
-</script>
+    // listen to SW messages (will only work if SW controller is active)
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.addEventListener('message', e => {
+        if (!e.data) return;
+        if (e.data.type === 'CACHE_PROGRESS') {
+          const pct = e.data.percent || 0;
+          bar.style.width = pct + '%';
+          msg.textContent = e.data.message || (pct + '%');
+        }
+        if (e.data.type === 'CACHE_COMPLETE') {
+          bar.style.width = '100%';
+          msg.textContent = 'Cache terpasang. Halaman siap dipakai offline.';
+        }
+      });
+    } else {
+      msg.textContent = 'Service Worker tidak tersedia pada browser ini.';
+    }
+  </script>
 </body>
 </html>
