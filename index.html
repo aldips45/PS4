@@ -4,23 +4,29 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lapse — PS4/PS5</title>
-  <meta name="description" content="Antarmuka futuristik dengan background bergerak. UI modern + offline support.">
+  <meta name="description" content="manual module load order to preserve exploit behavior.">
+
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+
   <style>
-    :root{--bg:#020114;--panel:#071027;--muted:#9fb0c8;--accent:#00f0ff;--accent2:#9b59ff}
+    :root{--bg:#020114;--muted:#9fb0c8;--accent:#00f0ff;--accent2:#9b59ff}
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Orbitron,Roboto Mono,system-ui,Arial;color:#dff6ff;overflow:hidden;background:radial-gradient(1200px 600px at 10% 10%, rgba(155,89,255,0.06), transparent 6%), radial-gradient(1000px 500px at 90% 90%, rgba(0,240,255,0.04), transparent 6%), #020114}
+    html,body{height:100%;margin:0;font-family:Orbitron,Roboto Mono,system-ui,Arial;color:#dff6ff;overflow:hidden;background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(155,89,255,0.06), transparent 6%),
+      radial-gradient(1000px 500px at 90% 90%, rgba(0,240,255,0.04), transparent 6%),
+      #020114}
     canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0}
-    .app{position:relative;z-index:2;max-width:1100px;margin:36px auto;padding:22px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)}
+    .app{position:relative;z-index:2;max-width:1100px;margin:36px auto;padding:22px;border-radius:14px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)}
     header{display:flex;gap:14px;align-items:center}
     .logo{width:72px;height:72px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent2),var(--accent));font-weight:700}
-    h1{margin:0;font-size:20px;letter-spacing:0.6px}
+    h1{margin:0;font-size:20px}
     .lead{margin:4px 0 0;color:var(--muted);font-size:13px}
     .grid{display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:20px}
     .panel{padding:14px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.02)}
-    #console{height:320px;overflow:auto;background:rgba(0,0,0,0.25);padding:12px;border-radius:8px;font-family:Roboto Mono,monospace;font-size:13px;color:#aef0ff;white-space:pre-wrap}
+    #console{height:320px;overflow:auto;background:rgba(0,0,0,0.24);padding:12px;border-radius:8px;font-family:Roboto Mono,monospace;font-size:13px;color:#aef0ff;white-space:pre-wrap}
     .controls{display:flex;gap:8px}
-    button{background:linear-gradient(90deg,var(--accent),var(--accent2));border:0;color:#021; padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(0,240,255,0.06)}
+    button{background:linear-gradient(90deg,var(--accent),var(--accent2));border:0;color:#021;padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer}
     button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
     .muted{color:var(--muted);font-size:13px}
     footer{margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
@@ -28,13 +34,15 @@
   </style>
 </head>
 <body>
+  <!-- animated background canvas -->
   <canvas id="bg" aria-hidden="true"></canvas>
+
   <main class="app" role="main" aria-label="Lapse Futuristic UI">
     <header>
       <div class="logo">LP</div>
       <div>
-        <h1>Lapse — Control</h1>
-        <div class="lead">ENJOY YOU PS4/5 JAILBREAK.</div>
+        <h1>Lapse — Futuristic Control</h1>
+        <div class="lead">UI modern. <strong>Script order preserved</strong> for PS4 compatibility.</div>
       </div>
     </header>
 
@@ -71,59 +79,62 @@
         </div>
 
         <hr style="opacity:0.06;margin:12px 0">
-        <div class="muted">PLEASE WAIT<code>YOUR PS4/5</code>SUCCSES FULLY LAPSE.</div>
+        <div class="muted">Keep <code>sw.js</code> and module files in same folder.</div>
       </aside>
     </div>
 
-    <footer>Futuristic UI — Background dynamic & responsive</footer>
+    <footer>Futuristic UI — Manual module loading for compatibility</footer>
   </main>
 
   <script>
-    // Particle background (simple, performant)
-    const canvas = document.getElementById('bg');
-    const ctx = canvas.getContext('2d');
-    let w = canvas.width = innerWidth, h = canvas.height = innerHeight, DPR = Math.max(1, devicePixelRatio || 1);
-    canvas.width = innerWidth * DPR; canvas.height = innerHeight * DPR; canvas.style.width = innerWidth+'px'; canvas.style.height = innerHeight+'px'; ctx.scale(DPR, DPR);
-    let pts = [];
-    const N = Math.max(24, Math.floor((innerWidth*innerHeight)/120000));
-    function rand(a,b){return Math.random()*(b-a)+a}
-    class Pt{constructor(){this.x=rand(0,w);this.y=rand(0,h);this.vx=rand(-0.25,0.25);this.vy=rand(-0.25,0.25);this.r=rand(0.6,2.2);this.c=Math.random()>0.5?'#9b59ff':'#00f0ff'} step(){this.x+=this.vx;this.y+=this.vy; if(this.x<-20||this.x>w+20||this.y<-20||this.y>h+20){this.x=rand(0,w);this.y=rand(0,h)} } draw(){ctx.beginPath();ctx.fillStyle=this.c;ctx.globalAlpha=0.22;ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}}
-    for(let i=0;i<N;i++)pts.push(new Pt());
-    function frame(){ctx.clearRect(0,0,w,h); for(const p of pts){p.step();p.draw()} // connect
-      ctx.beginPath(); for(let i=0;i<pts.length;i++){for(let j=i+1;j<pts.length;j++){let a=pts[i],b=pts[j];let dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy); if(d<120){ctx.strokeStyle='rgba(155,89,255,'+(0.12*(1-d/120))+')';ctx.lineWidth=0.7;ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}}} ctx.stroke(); requestAnimationFrame(frame)}
-    window.addEventListener('resize', ()=>{w=canvas.width=innerWidth*DPR;h=canvas.height=innerHeight*DPR;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(DPR,0,0,DPR,0,0)})
-    requestAnimationFrame(frame);
-
-    // UI logic & Service Worker
-    const consoleEl = document.getElementById('console');
-    const statusEl = document.getElementById('status');
-    const swState = document.getElementById('swState');
-    const cacheState = document.getElementById('cacheState');
-
-    function log(...args){const t=new Date().toLocaleTimeString(); consoleEl.textContent += `[${t}] ` + args.join(' ') + '\n'; consoleEl.scrollTop = consoleEl.scrollHeight;}
-
-    document.getElementById('run').addEventListener('click', ()=>{ log('UI demo started — no device changes.'); setTimeout(()=>log('System check... OK'),400); setTimeout(()=>log('Ready.'),1100);});
-    document.getElementById('clear').addEventListener('click', ()=>consoleEl.textContent='');
-
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.js').then(reg=>{ swState.textContent='registered'; log('SW registered, scope: '+reg.scope); cacheState.textContent = reg.waiting ? 'Installed (update waiting)' : 'Registered'; statusEl.textContent='Online'; }).catch(err=>{ swState.textContent='failed'; statusEl.textContent='SW failed'; log('SW registration failed:', err);});
-      navigator.serviceWorker.addEventListener('message', e=>{ if(!e.data) return; if(e.data.type==='CACHE_PROGRESS'){ cacheState.textContent = e.data.message || (e.data.percent+'%'); log('Cache:', cacheState.textContent);} if(e.data.type==='CACHE_COMPLETE'){ cacheState.textContent='Complete'; log('Cache complete'); } });
-      document.getElementById('install').addEventListener('click', ()=>{ if(navigator.serviceWorker.controller){ navigator.serviceWorker.controller.postMessage({type:'DOWNLOAD_OFFLINE'}); log('Requested offline download'); } else { log('No SW controller — reload page after registration'); } });
-      document.getElementById('open').addEventListener('click', ()=> window.open('./cache.html','_blank'));
-    } else { swState.textContent='unsupported'; statusEl.textContent='No SW'; log('Service Worker not supported'); }
-
-    // Dynamically load existing JS/MJS files from directory (preserve original behavior)
-    const existingScripts = ["alert.mjs", "config.mjs", "lapse.mjs", "psfree.mjs", "send.mjs"];
-    existingScripts.forEach(s=>{ if(s==='sw.js') return; const t = document.createElement(s.endsWith('.mjs') ? 'script' : 'script'); if(s.endsWith('.mjs')) t.type='module'; t.src='./'+s; document.body.appendChild(t); });
-
+    // lightweight particle background (keeps FPS low)
+    (function(){
+      const c = document.getElementById('bg'), ctx = c.getContext('2d');
+      let w = c.width = innerWidth, h = c.height = innerHeight, DPR = Math.max(1, devicePixelRatio || 1);
+      c.width = innerWidth * DPR; c.height = innerHeight * DPR; c.style.width = innerWidth + 'px'; c.style.height = innerHeight + 'px'; ctx.scale(DPR, DPR);
+      const N = Math.max(20, Math.floor((innerWidth*innerHeight)/140000));
+      const pts = [];
+      function r(a,b){return Math.random()*(b-a)+a}
+      class P{constructor(){this.x=r(0,w);this.y=r(0,h);this.vx=r(-0.2,0.2);this.vy=r(-0.2,0.2);this.r=r(0.6,1.8);this.c=Math.random()>0.5?'#9b59ff':'#00f0ff'}step(){this.x+=this.vx;this.y+=this.vy; if(this.x<-10||this.x>w+10||this.y<-10||this.y>h+10){this.x=r(0,w);this.y=r(0,h)}}draw(){ctx.beginPath();ctx.fillStyle=this.c;ctx.globalAlpha=0.22;ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}}
+      for(let i=0;i<N;i++)pts.push(new P());
+      function frame(){ctx.clearRect(0,0,w,h); for(const p of pts){p.step();p.draw()} ctx.beginPath(); for(let i=0;i<pts.length;i++){for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j];const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy); if(d<110){ctx.strokeStyle='rgba(155,89,255,'+(0.11*(1-d/110))+')';ctx.lineWidth=0.7;ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}}} ctx.stroke(); requestAnimationFrame(frame) }
+      window.addEventListener('resize', ()=>{w=c.width=innerWidth*DPR;h=c.height=innerHeight*DPR;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';ctx.setTransform(DPR,0,0,DPR,0,0)});
+      requestAnimationFrame(frame);
+    })();
   </script>
 
-  <!-- preserve original project scripts (if any) -->
+  <!-- ===== Manual module loading (IMPORTANT: preserve this order) =====
+       - memtools and view are in module/ (per original project)
+       - then other modules that depend on them (lapse.mjs etc.)
+       Adjust paths only if your repo layout differs. -->
+  <script type="module" src="./module/memtools.mjs"></script>
+  <script type="module" src="./module/view.mjs"></script>
+  <!-- preserve other original modules (order matters) -->
   <script type="module" src="./alert.mjs"></script>
   <script type="module" src="./config.mjs"></script>
   <script type="module" src="./lapse.mjs"></script>
   <script type="module" src="./psfree.mjs"></script>
   <script type="module" src="./send.mjs"></script>
 
+  <!-- Service Worker registration (optional) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(()=>{ /* ignore SW errors on PS4 */ });
+    }
+    // UI helpers (console & controls)
+    (function(){
+      const logEl = document.getElementById('console');
+      function write(...args){ const t=new Date().toLocaleTimeString(); logEl.textContent += `[${t}] ` + args.join(' ') + '\\n'; logEl.scrollTop = logEl.scrollHeight; }
+      document.getElementById('run').addEventListener('click', ()=> write('UI demo started — no device changes.'));
+      document.getElementById('clear').addEventListener('click', ()=> logEl.textContent = '');
+      document.getElementById('install').addEventListener('click', ()=> {
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({type:'DOWNLOAD_OFFLINE'});
+          write('Requested offline install.');
+        } else write('Service Worker controller not available.');
+      });
+      document.getElementById('open').addEventListener('click', ()=> window.open('./cache.html', '_blank'));
+    })();
+  </script>
 </body>
 </html>
