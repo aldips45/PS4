@@ -1,60 +1,142 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PS4/5 Exploit</title>
-<meta name="description" content="Modernized interface for PS4/5 exploit demo (UI only). Uses Service Worker for offline caching.">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lapse — PS4/PS5</title>
+  <meta name="description" content="Modern UI + Service Worker untuk demo offline (GitHub Pages friendly).">
 
+  <!-- Font: optional (kecepatan: GitHub Pages) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Roboto+Mono&display=swap" rel="stylesheet">
 
-<!-- Google Font -->
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#071025; --card:#0b1220; --muted:#9aa4b2; --accent:#7c3aed;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+    body{background:linear-gradient(180deg,#051026,var(--bg));display:grid;place-items:center;padding:20px;color:#e6eef8}
+    .app{width:100%;max-width:980px;border-radius:16px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+    header{display:flex;gap:14px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;font-weight:700;font-family:Roboto Mono;background:linear-gradient(135deg,var(--accent),#3b82f6);color:white}
+    h1{margin:0;font-size:18px}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
+    .card{background:var(--card);padding:14px;border-radius:12px}
+    #console{height:300px;overflow:auto;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;font-family:Roboto Mono,monospace;white-space:pre-wrap;color:#bfe0ff;font-size:13px}
+    .controls{display:flex;gap:8px}
+    button{background:linear-gradient(180deg,var(--accent),#5b21b6);border:0;color:white;padding:9px 12px;border-radius:10px;font-weight:600;cursor:pointer}
+    button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.05);color:var(--muted)}
+    .muted{color:var(--muted);font-size:13px}
+    .sidebar .info{font-size:13px;color:var(--muted);margin-bottom:12px}
+    @media (max-width:880px){ .grid{grid-template-columns:1fr} #console{height:220px} }
+  </style>
+</head>
+<body>
+  <main class="app" role="application">
+    <header>
+      <div class="logo">LP</div>
+      <div>
+        <h1>Lapse — PS4/PS5 UI</h1>
+        <p class="lead">Modern interface + offline support (Service Worker). Ditempatkan di <strong>/PS4/</strong>.</p>
+      </div>
+    </header>
 
+    <div class="grid">
+      <section class="card" aria-labelledby="consoleLabel">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="muted" id="consoleLabel">Console output</div>
+          <div class="controls">
+            <button id="runBtn">Run demo</button>
+            <button id="clearBtn" class="secondary">Clear</button>
+          </div>
+        </div>
 
-<style>
-:root{
---bg:#0f1724; /* deep navy */
---card:#0b1220;
---muted:#9aa4b2;
---accent:#7c3aed;
---glass: rgba(255,255,255,0.04);
---radius:14px;
-color-scheme: dark;
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
-body{background:linear-gradient(180deg,var(--bg),#060710);display:flex;align-items:center;justify-content:center;padding:24px;color:#e6eef8}
+        <pre id="console" aria-live="polite"></pre>
 
+        <div style="margin-top:12px;color:var(--muted);font-size:13px">
+          See <a href="./about.html" data-jslicense="1">JavaScript license information</a>.
+        </div>
+      </section>
 
-.app{
-width:100%;max-width:980px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter: blur(6px);
-}
+      <aside class="card sidebar" aria-label="Sidebar">
+        <div class="info">Status: <strong id="status">—</strong></div>
+        <div class="info">Cache: <span id="cacheStatus">—</span></div>
 
+        <div style="margin-top:6px">
+          <button id="installBtn">Install offline</button>
+          <button id="openOffline" class="secondary" style="margin-left:8px">Open offline page</button>
+        </div>
 
-header{display:flex;gap:18px;align-items:center}
-.logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#3b82f6);display:grid;place-items:center;font-weight:900;font-family:Roboto Mono;color:white}
-h1{font-size:20px;margin:0}
-p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+        <hr style="opacity:.06;margin:14px 0">
+        <div class="muted">Pastikan file berada di <code>/PS4/</code> di repo GitHub Pages.</div>
+      </aside>
+    </div>
+  </main>
 
+  <script type="module">
+    // simple logger
+    const $c = document.getElementById('console');
+    const statusEl = document.getElementById('status');
+    const cacheStatus = document.getElementById('cacheStatus');
+    function log(...args){
+      const t = new Date().toLocaleTimeString();
+      $c.textContent += `[${t}] ` + args.join(' ') + '\\n';
+      $c.scrollTop = $c.scrollHeight;
+    }
 
-.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:22px}
+    document.getElementById('runBtn').addEventListener('click', ()=>{
+      log('Demo started — UI-only simulation (tidak mengubah apapun).');
+      setTimeout(()=>log('Checking system... OK'),400);
+      setTimeout(()=>log('Staging payload... (simulated)'),1000);
+      setTimeout(()=>log('Ready.'),1700);
+    });
+    document.getElementById('clearBtn').addEventListener('click', ()=> $c.textContent = '');
 
+    // Service Worker registration: use relative path so scope = /PS4/
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        log('Service Worker ter-registrasi. scope=' + reg.scope);
+        cacheStatus.textContent = reg.waiting ? 'Installed (update waiting)' : 'Registered';
+        statusEl.textContent = 'SW registered';
+      }).catch(err => {
+        log('SW registration failed:', err);
+        statusEl.textContent = 'SW failed';
+        cacheStatus.textContent = 'Unavailable';
+      });
 
-.card{background:var(--card);padding:18px;border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
+      // receive messages from SW
+      navigator.serviceWorker.addEventListener('message', e => {
+        if (!e.data) return;
+        if (e.data.type === 'CACHE_PROGRESS') {
+          cacheStatus.textContent = e.data.message || (e.data.percent + '%');
+          log('Cache:', cacheStatus.textContent);
+        }
+        if (e.data.type === 'CACHE_COMPLETE') {
+          cacheStatus.textContent = 'Complete';
+          log('Cache: completed');
+        }
+      });
 
+      document.getElementById('installBtn').addEventListener('click', ()=>{
+        log('Requesting Service Worker untuk mengunduh asset offline...');
+        // If controller exists, send message
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({type:'DOWNLOAD_OFFLINE'});
+        } else {
+          log('Tidak ada active service worker controller. Coba reload halaman.');
+        }
+      });
 
-#console{height:320px;overflow:auto;background:var(--glass);padding:14px;border-radius:10px;font-family:Roboto Mono,monospace;font-size:13px;color:#bfe0ff;white-space:pre-wrap}
-
-
-.controls{display:flex;gap:10px;align-items:center}
-button{background:linear-gradient(180deg,var(--accent),#5b21b6);border:0;color:white;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer}
-button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-.muted{color:var(--muted);font-size:13px}
-
-
-.sidebar .info{font-size:13px;color:var(--muted);margin-bottom:12px}
-a{color:inherit}
-
-
+      document.getElementById('openOffline').addEventListener('click', ()=> {
+        window.open('./cache.html', '_blank');
+      });
+    } else {
+      statusEl.textContent = 'No Service Worker support';
+      cacheStatus.textContent = 'Not supported';
+      log('Browser tidak mendukung Service Worker.');
+    }
+  </script>
+</body>
 </html>
