@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lapse — PS4/PS5 (Futuristic)</title>
+  <meta name="description" content="Antarmuka futuristik dengan background bergerak. UI modern + offline support.">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#020114;--panel:#071027;--muted:#9fb0c8;--accent:#00f0ff;--accent2:#9b59ff}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Orbitron,Roboto Mono,system-ui,Arial;color:#dff6ff;overflow:hidden;background:radial-gradient(1200px 600px at 10% 10%, rgba(155,89,255,0.06), transparent 6%), radial-gradient(1000px 500px at 90% 90%, rgba(0,240,255,0.04), transparent 6%), #020114}
+    canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+    .app{position:relative;z-index:2;max-width:1100px;margin:36px auto;padding:22px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)}
+    header{display:flex;gap:14px;align-items:center}
+    .logo{width:72px;height:72px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent2),var(--accent));font-weight:700}
+    h1{margin:0;font-size:20px;letter-spacing:0.6px}
+    .lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:20px}
+    .panel{padding:14px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.02)}
+    #console{height:320px;overflow:auto;background:rgba(0,0,0,0.25);padding:12px;border-radius:8px;font-family:Roboto Mono,monospace;font-size:13px;color:#aef0ff;white-space:pre-wrap}
+    .controls{display:flex;gap:8px}
+    button{background:linear-gradient(90deg,var(--accent),var(--accent2));border:0;color:#021; padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(0,240,255,0.06)}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+    .muted{color:var(--muted);font-size:13px}
+    footer{margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}#console{height:220px}}
+  </style>
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <main class="app" role="main" aria-label="Lapse Futuristic UI">
+    <header>
+      <div class="logo">LP</div>
+      <div>
+        <h1>Lapse — Futuristic Control</h1>
+        <div class="lead">UI modern dengan background particle. Tetap ramah offline dan kompatibel.</div>
+      </div>
+    </header>
+
+    <div style="height:8px"></div>
+
+    <div class="grid">
+      <section class="panel" aria-labelledby="consoleLabel">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="muted" id="consoleLabel">Console Output</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div class="muted" id="status">Status: —</div>
+            <div class="controls">
+              <button id="run">Run</button>
+              <button id="clear" class="ghost">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <pre id="console" aria-live="polite"></pre>
+
+        <div style="margin-top:12px" class="muted">See <a href="./about.html">JavaScript license information</a>.</div>
+      </section>
+
+      <aside class="panel" aria-label="Sidebar">
+        <div class="muted">Service Worker</div>
+        <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+          <div class="muted" id="swState">—</div>
+          <div style="flex:1;text-align:right"><span class="muted" id="cacheState">Cache: —</span></div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:8px">
+          <button id="install">Install Offline</button>
+          <button id="open" class="ghost">Open Offline</button>
+        </div>
+
+        <hr style="opacity:0.06;margin:12px 0">
+        <div class="muted">Placed at repository. Keep <code>sw.js</code> in same folder for offline functionality.</div>
+      </aside>
+    </div>
+
+    <footer>Futuristic UI — Background dynamic & responsive</footer>
+  </main>
+
+  <script>
+    // Particle background (simple, performant)
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = innerWidth, h = canvas.height = innerHeight, DPR = Math.max(1, devicePixelRatio || 1);
+    canvas.width = innerWidth * DPR; canvas.height = innerHeight * DPR; canvas.style.width = innerWidth+'px'; canvas.style.height = innerHeight+'px'; ctx.scale(DPR, DPR);
+    let pts = [];
+    const N = Math.max(24, Math.floor((innerWidth*innerHeight)/120000));
+    function rand(a,b){return Math.random()*(b-a)+a}
+    class Pt{constructor(){this.x=rand(0,w);this.y=rand(0,h);this.vx=rand(-0.25,0.25);this.vy=rand(-0.25,0.25);this.r=rand(0.6,2.2);this.c=Math.random()>0.5?'#9b59ff':'#00f0ff'} step(){this.x+=this.vx;this.y+=this.vy; if(this.x<-20||this.x>w+20||this.y<-20||this.y>h+20){this.x=rand(0,w);this.y=rand(0,h)} } draw(){ctx.beginPath();ctx.fillStyle=this.c;ctx.globalAlpha=0.22;ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}}
+    for(let i=0;i<N;i++)pts.push(new Pt());
+    function frame(){ctx.clearRect(0,0,w,h); for(const p of pts){p.step();p.draw()} // connect
+      ctx.beginPath(); for(let i=0;i<pts.length;i++){for(let j=i+1;j<pts.length;j++){let a=pts[i],b=pts[j];let dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy); if(d<120){ctx.strokeStyle='rgba(155,89,255,'+(0.12*(1-d/120))+')';ctx.lineWidth=0.7;ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}}} ctx.stroke(); requestAnimationFrame(frame)}
+    window.addEventListener('resize', ()=>{w=canvas.width=innerWidth*DPR;h=canvas.height=innerHeight*DPR;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(DPR,0,0,DPR,0,0)})
+    requestAnimationFrame(frame);
+
+    // UI logic & Service Worker
+    const consoleEl = document.getElementById('console');
+    const statusEl = document.getElementById('status');
+    const swState = document.getElementById('swState');
+    const cacheState = document.getElementById('cacheState');
+
+    function log(...args){const t=new Date().toLocaleTimeString(); consoleEl.textContent += `[${t}] ` + args.join(' ') + '\n'; consoleEl.scrollTop = consoleEl.scrollHeight;}
+
+    document.getElementById('run').addEventListener('click', ()=>{ log('UI demo started — no device changes.'); setTimeout(()=>log('System check... OK'),400); setTimeout(()=>log('Ready.'),1100);});
+    document.getElementById('clear').addEventListener('click', ()=>consoleEl.textContent='');
+
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('./sw.js').then(reg=>{ swState.textContent='registered'; log('SW registered, scope: '+reg.scope); cacheState.textContent = reg.waiting ? 'Installed (update waiting)' : 'Registered'; statusEl.textContent='Online'; }).catch(err=>{ swState.textContent='failed'; statusEl.textContent='SW failed'; log('SW registration failed:', err);});
+      navigator.serviceWorker.addEventListener('message', e=>{ if(!e.data) return; if(e.data.type==='CACHE_PROGRESS'){ cacheState.textContent = e.data.message || (e.data.percent+'%'); log('Cache:', cacheState.textContent);} if(e.data.type==='CACHE_COMPLETE'){ cacheState.textContent='Complete'; log('Cache complete'); } });
+      document.getElementById('install').addEventListener('click', ()=>{ if(navigator.serviceWorker.controller){ navigator.serviceWorker.controller.postMessage({type:'DOWNLOAD_OFFLINE'}); log('Requested offline download'); } else { log('No SW controller — reload page after registration'); } });
+      document.getElementById('open').addEventListener('click', ()=> window.open('./cache.html','_blank'));
+    } else { swState.textContent='unsupported'; statusEl.textContent='No SW'; log('Service Worker not supported'); }
+
+    // Dynamically load existing JS/MJS files from directory (preserve original behavior)
+    const existingScripts = ["alert.mjs", "config.mjs", "lapse.mjs", "psfree.mjs", "send.mjs"];
+    existingScripts.forEach(s=>{ if(s==='sw.js') return; const t = document.createElement(s.endsWith('.mjs') ? 'script' : 'script'); if(s.endsWith('.mjs')) t.type='module'; t.src='./'+s; document.body.appendChild(t); });
+
+  </script>
+
+  <!-- preserve original project scripts (if any) -->
+  <script type="module" src="./alert.mjs"></script>
+  <script type="module" src="./config.mjs"></script>
+  <script type="module" src="./lapse.mjs"></script>
+  <script type="module" src="./psfree.mjs"></script>
+  <script type="module" src="./send.mjs"></script>
+
+</body>
+</html>

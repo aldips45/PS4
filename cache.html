@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Offline Installer — Futuristic</title>
+  <style>
+    :root{--bg:#020116;--accent:#9b59ff;--accent2:#00f0ff;color:white}
+    html,body{height:100%;margin:0;font-family:Orbitron,Roboto Mono,Arial;background:linear-gradient(180deg,#020116,var(--bg));display:grid;place-items:center;overflow:hidden}
+    .card{max-width:720px;padding:28px;border-radius:14px;background:rgba(255,255,255,0.02);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.03);text-align:center}
+    h1{margin:0 0 8px;font-size:22px}
+    p{color:#9fb0c8}
+    .progress{height:14px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;margin-top:18px}
+    .bar{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s ease}
+    .muted{color:#9fb0c8;margin-top:12px}
+    button{margin-top:18px;padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#021;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-live="polite">
+    <h1>Offline Mode — Installer</h1>
+    <p>Installer offline akan menyimpan file agar halaman tetap dapat digunakan tanpa koneksi.</p>
+
+    <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+    <div class="muted" id="msg">Menunggu...</div>
+    <div><button id="reload">Reload</button></div>
+  </div>
+
+  <script>
+    const bar = document.getElementById('bar'), msg = document.getElementById('msg');
+    document.getElementById('reload').addEventListener('click', ()=> location.reload());
+    if(navigator.serviceWorker){
+      navigator.serviceWorker.addEventListener('message', e=>{
+        if(!e.data) return;
+        if(e.data.type==='CACHE_PROGRESS'){ const pct = e.data.percent || 0; bar.style.width = pct + '%'; msg.textContent = e.data.message || (pct + '%'); }
+        if(e.data.type==='CACHE_COMPLETE'){ bar.style.width = '100%'; msg.textContent = 'Cache terpasang. Anda bisa menutup halaman ini.'; setTimeout(()=>location.replace('./index.html'),1500); }
+      });
+    } else { msg.textContent = 'Service Worker tidak tersedia pada browser ini.'; }
+  </script>
+</body>
+</html>
