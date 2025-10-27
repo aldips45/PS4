@@ -54,15 +54,15 @@ import * as off from './module/offset.mjs';
 // check if we are running on a supported firmware version
 const [is_ps4, version] = (() => {
     const value = config.target;
-    const is_ps4 = (value & 0x1250);
-    const version = value & 0x04e4;
-    const [lower, upper] = (() => {
-        if (is_ps4) {
-            return [0x1250, 0x1252];
-        } else {
-            return [0x1250, 0x1252];
-        }
-    })();
+
+    // pastikan boolean, bukan hasil bitwise mentah
+    const is_ps4 = (value >= 0x1250 && value < 0x1300); // contoh range PS4
+    const version = value;
+
+    // tentukan rentang versi sesuai platform
+    const [lower, upper] = is_ps4
+        ? [0x1250, 0x1252] // PS4: 6.00 - 10.00
+        : [0x1000, 0x1600]; // PS5: 1.00 - 6.00 (contoh)
 
     if (!(lower <= version && version < upper)) {
         throw RangeError(`invalid config.target: ${hex(value)}`);
@@ -71,20 +71,19 @@ const [is_ps4, version] = (() => {
     return [is_ps4, version];
 })();
 
+
 const ssv_len = (() => {
     if (0x1250 <= config.target && config.target < 0x1252) {
-        return 0x58;
-    }
-
-    // PS4 9.xx and all supported PS5 versions
-    if (config.target >= 0x1250) {
-        return 0x50;
-    }
-
-    if (0x1250 <= config.target && config.target < 0x1252) {
-        return 0x48;
+        return 0x58; // PS4 6.xx–8.xx
+    } else if (0x1252 <= config.target && config.target < 0x1300) {
+        return 0x50; // PS4 9.xx dan PS5 awal
+    } else if (0x1300 <= config.target) {
+        return 0x48; // PS5 terbaru
+    } else {
+        throw new Error(`Unsupported config.target: ${hex(config.target)}`);
     }
 })();
+
 
 // these constants are expected to be divisible by 2
 const num_fsets = 0x180;
