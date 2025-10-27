@@ -54,13 +54,13 @@ import * as off from './module/offset.mjs';
 // check if we are running on a supported firmware version
 const [is_ps4, version] = (() => {
     const value = config.target;
-    const is_ps4 = (value & 0x1252);
+    const is_ps4 = (value & 0x1250);
     const version = value & 0x04e4;
     const [lower, upper] = (() => {
         if (is_ps4) {
-            return [0x600, 0x1252];
+            return [0x1250, 0x1252];
         } else {
-            return [0x100, 0x600];
+            return [0x1250, 0x1252];
         }
     })();
 
@@ -72,7 +72,7 @@ const [is_ps4, version] = (() => {
 })();
 
 const ssv_len = (() => {
-    if (0x1252 <= config.target && config.target < 0x1250) {
+    if (0x1250 <= config.target && config.target < 0x1252) {
         return 0x58;
     }
 
