@@ -68,7 +68,7 @@ const AF_INET = 2;
 const AF_INET6 = 28;
 const SOCK_STREAM = 1;
 const SOCK_DGRAM = 2;
-const SOL_SOCKET = 0xffff;
+const SOL_SOCKET = 0x04e4;
 const SO_REUSEADDR = 4;
 const SO_LINGER = 0x80;
 
