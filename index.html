@@ -1,13 +1,13 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>PS4n</title>
+    <title>PS4 - Teknologi Masa Depan</title>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
 
 ```
   body {
-    background: radial-gradient(circle at center, #050510 0%, #000000 100%);
+    background-color: #000000;
     color: #00ffff;
     font-family: 'Orbitron', sans-serif;
     text-align: center;
@@ -16,12 +16,33 @@
     overflow: hidden;
   }
 
+  /* Efek muncul lembut */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo {
+    width: 120px;
+    height: auto;
+    margin-top: 40px;
+    filter: drop-shadow(0 0 20px #00e0ff);
+    animation: fadeIn 2s ease-out 0.2s forwards, pulse 3s infinite ease-in-out alternate;
+    opacity: 0;
+  }
+
+  @keyframes pulse {
+    from { filter: drop-shadow(0 0 10px #00e0ff); }
+    to { filter: drop-shadow(0 0 30px #00ffff); }
+  }
+
   h1 {
-    font-size: 2.8em;
+    font-size: 2.4em;
     letter-spacing: 4px;
-    margin-bottom: 10px;
+    margin-top: 15px;
     text-shadow: 0 0 10px #00ffff, 0 0 30px #0088ff;
-    animation: glow 3s ease-in-out infinite alternate;
+    opacity: 0;
+    animation: fadeIn 2s ease-out 1.5s forwards, glow 3s ease-in-out infinite alternate;
   }
 
   @keyframes glow {
@@ -33,6 +54,8 @@
     font-size: 1em;
     color: #b0ffff;
     text-decoration: none;
+    opacity: 0;
+    animation: fadeIn 2s ease-out 2.5s forwards;
   }
 
   a:hover {
@@ -55,74 +78,30 @@
     text-align: left;
     white-space: pre-wrap;
     overflow: hidden;
-  }
-
-  .scanline {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(0, 255, 255, 0.03) 0px,
-      rgba(0, 255, 255, 0.03) 2px,
-      transparent 2px,
-      transparent 4px
-    );
-    pointer-events: none;
-    animation: scan 4s linear infinite;
-  }
-
-  @keyframes scan {
-    from { background-position: 0 0; }
-    to { background-position: 0 100%; }
-  }
-
-  .particle {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: #00ffff;
-    border-radius: 50%;
-    animation: move 10s linear infinite;
-    opacity: 0.7;
-  }
-
-  @keyframes move {
-    from { transform: translateY(0) scale(1); opacity: 1; }
-    to { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+    opacity: 0;
+    animation: fadeIn 2s ease-out 3s forwards;
   }
 </style>
 
 <script>
-  // Pertahankan fungsi asli
+  // Fungsi asli tetap dipertahankan
   if (window.applicationCache.status == '0') {
     window.location.replace("cache.html");
   }
-
-  // Efek partikel (hiasan)
-  document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement('div');
-      p.classList.add('particle');
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.animationDuration = (5 + Math.random() * 10) + 's';
-      p.style.animationDelay = Math.random() * 10 + 's';
-      document.body.appendChild(p);
-    }
-  });
 </script>
 ```
 
   </head>
 
   <body>
-    <div class="scanline"></div>
-    <h1>PS4 - LAPSE</h1>
-    <p>Welcome to user hen</p>
+    <!-- Logo PlayStation -->
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Playstation_logo_colour.svg" alt="PlayStation Logo">
 
 ```
+<!-- Judul PS4 LAPSE -->
+<h1>PS4 - LAPSE</h1>
+<p>Welcome to the Future Interface</p>
+
 <div id="console"></div>
 
 <p>
