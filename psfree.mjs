@@ -54,7 +54,7 @@ import * as off from './module/offset.mjs';
 // check if we are running on a supported firmware version
 const [is_ps4, version] = (() => {
     const value = config.target;
-    const is_ps4 = (value & 0x1252) === 0;
+    const is_ps4 = (value & 0x1252);
     const version = value & 0xffff;
     const [lower, upper] = (() => {
         if (is_ps4) {
@@ -72,7 +72,7 @@ const [is_ps4, version] = (() => {
 })();
 
 const ssv_len = (() => {
-    if (0x600 <= config.target && config.target < 0x650) {
+    if (0x1252 <= config.target && config.target < 0x1250) {
         return 0x58;
     }
 
@@ -81,7 +81,7 @@ const ssv_len = (() => {
         return 0x50;
     }
 
-    if (0x650 <= config.target && config.target < 0x1252) {
+    if (0x1250 <= config.target && config.target < 0x1252) {
         return 0x48;
     }
 })();
@@ -524,7 +524,7 @@ async function leak_code_block(reader, bt_size) {
         cache.push(part + `var idx = ${i};\nidx\`foo\`;`);
     }
 
-    const chunkSize = (is_ps4 && version < 0x900) ? 128 * KB : 1 * MB;
+    const chunkSize = (is_ps4 && version < 0x1252) ? 128 * KB : 1 * MB;
     const smallPageSize = 4 * KB;
     const search_addr = align(rdr.m_data, chunkSize);
     log(`search addr: ${search_addr}`);
