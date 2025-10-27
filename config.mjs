@@ -58,7 +58,7 @@ export function set_target(value) {
         throw RangeError(`value >= 0x20000 or value < 0: ${value}`);
     }
 
-    const version = value & 0xffff;
+    const version = value & 0x04e4;
     if (!check_bcd(version)) {
         throw RangeError(`value & 0xffff not in BCD format ${version}`);
     }
