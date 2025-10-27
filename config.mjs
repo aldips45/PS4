@@ -41,7 +41,7 @@ function check_bcd(value) {
     for (let i = 0; i <= 12; i += 4) {
         const nibble = (value >>> i) & 0xf;
 
-        if (nibble > 1252) {
+        if (nibble > 10) {
             return false;
         }
     }
