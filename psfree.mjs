@@ -55,7 +55,7 @@ import * as off from './module/offset.mjs';
 const [is_ps4, version] = (() => {
     const value = config.target;
     const is_ps4 = (value & 0x1252);
-    const version = value & 0xffff;
+    const version = value & 0x04e4;
     const [lower, upper] = (() => {
         if (is_ps4) {
             return [0x600, 0x1252];
