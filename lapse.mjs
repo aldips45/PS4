@@ -45,15 +45,15 @@ const t1 = performance.now();
 // check if we are running on a supported firmware version
 const [is_ps4, version] = (() => {
     const value = config.target;
-    const is_ps4 = (value & 0x1252);
-    const version = value & 0x04e4;
-    const [lower, upper] = (() => {
-        if (is_ps4) {
-            return [0x100, 0x1252];
-        } else {
-            return [0x100, 0x1300];
-        }
-    })();
+
+    // pastikan boolean, bukan hasil bitwise mentah
+    const is_ps4 = (value >= 0x1250 && value < 0x1300); // contoh range PS4
+    const version = value;
+
+    // tentukan rentang versi sesuai platform
+    const [lower, upper] = is_ps4
+        ? [0x1250, 0x1252] // PS4: 6.00 - 10.00
+        : [0x1000, 0x1600]; // PS5: 1.00 - 6.00 (contoh)
 
     if (!(lower <= version && version < upper)) {
         throw RangeError(`invalid config.target: ${hex(value)}`);
@@ -61,6 +61,7 @@ const [is_ps4, version] = (() => {
 
     return [is_ps4, version];
 })();
+
 
 // sys/socket.h
 const AF_UNIX = 1;
