@@ -1,47 +1,137 @@
-<!-- Copyright (C) 2023-2025 anonymous
-
-This file is part of PSFree.
-
-PSFree is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-PSFree is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
 <html>
-    <head>
-        <meta charset='utf-8'>
-        <title>PS4 LAPSE 1250-1252</title>
-        <style>
-            @font-face {
-                font-family: 'logging';
-                src: url('fonts/LiberationMono-Regular.ttf');
-            }
-            #console {
-                font-family: 'logging';
-            }
-        </style>
-        <script>
-        if (window.applicationCache.status=='0')
-        {
-          window.location.replace("cache.html");
-        }
-        </script>
-    </head>
-    <body>
-        PS4 - LAPSE 
-        <br>
-        <br>
-        See <a href='./about.html' data-jslicense='1'>JavaScript license information</a> for the
-        source code and license.<br>
-        <pre id='console'></pre>
-    </body>
-    <script type='module' src='./alert.mjs'></script>
+  <head>
+    <meta charset="utf-8">
+    <title>PS4n</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
+```
+  body {
+    background: radial-gradient(circle at center, #050510 0%, #000000 100%);
+    color: #00ffff;
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 40px;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-size: 2.8em;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #00ffff, 0 0 30px #0088ff;
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 15px #00ffff; }
+    to { text-shadow: 0 0 35px #00e0ff, 0 0 60px #007bff; }
+  }
+
+  p, a {
+    font-size: 1em;
+    color: #b0ffff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 10px #00ffff;
+  }
+
+  #console {
+    font-family: 'logging', monospace;
+    background: rgba(0, 255, 255, 0.08);
+    border: 1px solid #00e0ff;
+    border-radius: 10px;
+    width: 80%;
+    margin: 40px auto;
+    padding: 20px;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.25);
+    color: #b0ffff;
+    font-size: 1.1em;
+    min-height: 160px;
+    text-align: left;
+    white-space: pre-wrap;
+    overflow: hidden;
+  }
+
+  .scanline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0, 255, 255, 0.03) 0px,
+      rgba(0, 255, 255, 0.03) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+    pointer-events: none;
+    animation: scan 4s linear infinite;
+  }
+
+  @keyframes scan {
+    from { background-position: 0 0; }
+    to { background-position: 0 100%; }
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #00ffff;
+    border-radius: 50%;
+    animation: move 10s linear infinite;
+    opacity: 0.7;
+  }
+
+  @keyframes move {
+    from { transform: translateY(0) scale(1); opacity: 1; }
+    to { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+  }
+</style>
+
+<script>
+  // Pertahankan fungsi asli
+  if (window.applicationCache.status == '0') {
+    window.location.replace("cache.html");
+  }
+
+  // Efek partikel (hiasan)
+  document.addEventListener('DOMContentLoaded', () => {
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (5 + Math.random() * 10) + 's';
+      p.style.animationDelay = Math.random() * 10 + 's';
+      document.body.appendChild(p);
+    }
+  });
+</script>
+```
+
+  </head>
+
+  <body>
+    <div class="scanline"></div>
+    <h1>PS4 - LAPSE</h1>
+    <p>Welcome to user hen</p>
+
+```
+<div id="console"></div>
+
+<p>
+  See <a href="./about.html" data-jslicense="1">JavaScript license information</a> for the source code and license.
+</p>
+```
+
+  </body>
+
+  <script type="module" src="./alert.mjs"></script>
+
 </html>
