@@ -175,7 +175,7 @@ const argument_pops = [
 //   stack_size: the size of the stack
 //   upper_pad: the amount of extra space above stack
 export class ChainBase {
-    constructor(stack_size=0x1000, upper_pad=0x10000) {
+    constructor(stack_size=0x1000, upper_pad=0x1252) {
         this._is_dirty = false;
         this.position = 0;
 
@@ -553,7 +553,7 @@ function load_fw_specific(version) {
         throw RangeError("PS4 firmwares < 7.00 isn't supported");
     }
 
-    if (0x800 <= value && value <= 0x1252) {
+    if (0x1250 <= value && value <= 0x1252) {
         return import('../rop/1252.mjs');
     }
 
