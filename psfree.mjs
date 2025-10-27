@@ -56,7 +56,7 @@ const [is_ps4, version] = (() => {
     const value = config.target;
 
     // pastikan boolean, bukan hasil bitwise mentah
-    const is_ps4 = (value >= 0x1250 && value < 0x1300); // contoh range PS4
+    const is_ps4 = (value >= 0x1250 && value < 0x1252); // contoh range PS4
     const version = value;
 
     // tentukan rentang versi sesuai platform
@@ -64,7 +64,7 @@ const [is_ps4, version] = (() => {
         ? [0x1250, 0x1252] // PS4: 6.00 - 10.00
         : [0x1000, 0x1600]; // PS5: 1.00 - 6.00 (contoh)
 
-    if (!(lower <= version && version < upper)) {
+    if (!(lower <= version && version <= upper)) {
         throw RangeError(`invalid config.target: ${hex(value)}`);
     }
 
