@@ -77,7 +77,7 @@ const ssv_len = (() => {
     }
 
     // PS4 9.xx and all supported PS5 versions
-    if (config.target >= 0x1252) {
+    if (config.target >= 0x1250) {
         return 0x50;
     }
 
