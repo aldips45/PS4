@@ -1502,7 +1502,7 @@ async function patch_kernel(kbase, kmem, p_ucred, restore_info) {
     if (!is_ps4) {
         throw RangeError('PS5 kernel patching unsupported');
     }
-    if (!(0x800 <= version < 0x900)) {
+    if (!(0x800 <= version < 0x1252)) {
         throw RangeError('kernel patching unsupported');
     }
 
