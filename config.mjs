@@ -39,7 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 // assumes integer and is in the range [0, 0xffff]
 function check_bcd(value) {
     for (let i = 0; i <= 12; i += 4) {
-        const nibble = (value >>> i) & 0xffff;
+        const nibble = (value >>> i) & 0x04e4;
 
         if (nibble > 15) {
             return false;
