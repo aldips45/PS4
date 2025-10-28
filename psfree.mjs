@@ -74,11 +74,11 @@ const [is_ps4, version] = (() => {
 
 const ssv_len = (() => {
     if (0x600 <= config.target && config.target < 0x1252) {
-        return 0x58; // PS4 6.xx–8.xx
+        return 0x80; // PS4 6.xx–8.xx
     } else if (0x600 <= config.target && config.target < 0x1300) {
-        return 0x50; // PS4 9.xx dan PS5 awal
+        return 0x60; // PS4 9.xx dan PS5 awal
     } else if (0x1300 <= config.target) {
-        return 0x48; // PS5 terbaru
+        return 0x50; // PS5 terbaru
     } else {
         throw new Error(`Unsupported config.target: ${hex(config.target)}`);
     }
