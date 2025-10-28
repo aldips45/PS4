@@ -56,12 +56,12 @@ const [is_ps4, version] = (() => {
     const value = config.target;
 
     // pastikan boolean, bukan hasil bitwise mentah
-    const is_ps4 = (value >= 0x1250 && value < 0x1252); // contoh range PS4
+    const is_ps4 = (value >= 0x600 && value < 0x1252); // contoh range PS4
     const version = value;
 
     // tentukan rentang versi sesuai platform
     const [lower, upper] = is_ps4
-        ? [0x1250, 0x1252] // PS4: 6.00 - 10.00
+        ? [0x600, 0x1252] // PS4: 6.00 - 10.00
         : [0x1000, 0x1600]; // PS5: 1.00 - 6.00 (contoh)
 
     if (!(lower <= version && version <= upper)) {
@@ -73,9 +73,9 @@ const [is_ps4, version] = (() => {
 
 
 const ssv_len = (() => {
-    if (0x1250 <= config.target && config.target < 0x1252) {
+    if (0x600 <= config.target && config.target < 0x1252) {
         return 0x58; // PS4 6.xx–8.xx
-    } else if (0x1252 <= config.target && config.target < 0x1300) {
+    } else if (0x600 <= config.target && config.target < 0x1300) {
         return 0x50; // PS4 9.xx dan PS5 awal
     } else if (0x1300 <= config.target) {
         return 0x48; // PS5 terbaru
