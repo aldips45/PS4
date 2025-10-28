@@ -39,7 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 // assumes integer and is in the range [0, 0xffff]
 function check_bcd(value) {
     for (let i = 0; i <= 12; i += 4) {
-        const nibble = (value >>> i) & 0x04e4;
+        const nibble = (value >>> i) & 0xf;
 
         if (nibble > 15) {
             return false;
@@ -58,9 +58,9 @@ export function set_target(value) {
         throw RangeError(`value >= 0x20000 or value < 0: ${value}`);
     }
 
-    const version = value & 0x04e4;
+    const version = value & 0x0ffff;
     if (!check_bcd(version)) {
-        throw RangeError(`value & 0x04e4 not in BCD format ${version}`);
+        throw RangeError(`value & 0xffff not in BCD format ${version}`);
     }
 
     target = value;
