@@ -60,7 +60,7 @@ export function set_target(value) {
 
     const version = value & 0x04e4;
     if (!check_bcd(version)) {
-        throw RangeError(`value & 0xffff not in BCD format ${version}`);
+        throw RangeError(`value & 0x04e4 not in BCD format ${version}`);
     }
 
     target = value;
