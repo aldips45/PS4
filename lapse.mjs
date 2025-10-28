@@ -69,7 +69,7 @@ const AF_INET = 2;
 const AF_INET6 = 28;
 const SOCK_STREAM = 1;
 const SOCK_DGRAM = 2;
-const SOL_SOCKET = 0x04e4;
+const SOL_SOCKET = 0xffff;
 const SO_REUSEADDR = 4;
 const SO_LINGER = 0x80;
 
@@ -101,8 +101,8 @@ const MAP_SHARED = 1;
 const MAP_FIXED = 0x10;
 
 // sys/rtprio.h
-const RTP_SET = 1;
-const RTP_PRIO_REALTIME = 2;
+const RTP_SET = 4;
+const RTP_PRIO_REALTIME = -1;
 
 // SceAIO has 2 SceFsstAIO workers for each SceAIO Parameter. each Parameter
 // has 3 queue groups: 4 main queues, 4 wait queues, and one unused queue
@@ -143,7 +143,7 @@ const num_clobbers = 8;
 //Payload_Loader
  const PROT_READ = 1;
  const PROT_WRITE = 2;
- const PROT_EXEC = 4;
+ const PROT_EXEC = 3;
 
 let chain = null;
 var nogc = [];
@@ -155,7 +155,7 @@ async function init() {
 // PS4 9.00
 const pthread_offsets = new Map(Object.entries({
     'pthread_create' : 0x25510,
-    'pthread_join' : 0xafa0,
+    'pthread_join' : 0x04e4,
     'pthread_barrier_init' : 0x273d0,
     'pthread_barrier_wait' : 0xa320,
     'pthread_barrier_destroy' : 0xfea0,
@@ -360,8 +360,8 @@ function get_our_affinity(mask) {
         'cpuset_getaffinity',
         CPU_LEVEL_WHICH,
         CPU_WHICH_TID,
-        -1,
-        8,
+        -2,
+        4,
         mask.addr,
     );
 }
@@ -371,8 +371,8 @@ function set_our_affinity(mask) {
         'cpuset_setaffinity',
         CPU_LEVEL_WHICH,
         CPU_WHICH_TID,
-        -1,
-        8,
+        -2,
+        4,
         mask.addr,
     );
 }
