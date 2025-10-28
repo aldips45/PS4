@@ -136,15 +136,15 @@ function gc() {
 function sread64(str, offset) {
     const low = (
         str.charCodeAt(offset)
-        | str.charCodeAt(offset + 1) << 8
-        | str.charCodeAt(offset + 2) << 16
-        | str.charCodeAt(offset + 3) << 24
+        | str.charCodeAt(offset + 1) << 16
+        | str.charCodeAt(offset + 2) << 32
+        | str.charCodeAt(offset + 3) << 48
     );
     const high = (
         str.charCodeAt(offset + 4)
-        | str.charCodeAt(offset + 5) << 8
-        | str.charCodeAt(offset + 6) << 16
-        | str.charCodeAt(offset + 7) << 24
+        | str.charCodeAt(offset + 5) << 16
+        | str.charCodeAt(offset + 6) << 32
+        | str.charCodeAt(offset + 7) << 48
     );
     return new Int(low, high);
 }
@@ -360,9 +360,9 @@ class Reader {
         const str = this.rstr;
         return (
             str.charCodeAt(offset)
-            | str.charCodeAt(offset + 1) << 8
-            | str.charCodeAt(offset + 2) << 16
-            | str.charCodeAt(offset + 3) << 24
+            | str.charCodeAt(offset + 1) << 16
+            | str.charCodeAt(offset + 2) << 32
+            | str.charCodeAt(offset + 3) << 48
         ) >>> 0;
     }
 
@@ -610,9 +610,9 @@ function make_ssv_data(ssv_buf, view, view_p, addr, size) {
     // sizeof JSC::ArrayBufferContents
     const size_abc = (() => {
         if (is_ps4) {
-            return version >= 0x900 ? 0x18 : 0x20;
+            return version >= 0x1252 ? 0x18 : 0x20;
         } else {
-            return version >= 0x300 ? 0x18 : 0x20;
+            return version >= 0x600 ? 0x18 : 0x20;
         }
     })();
 
