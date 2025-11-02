@@ -47,12 +47,12 @@ const [is_ps4, version] = (() => {
     const value = config.target;
 
     // pastikan boolean, bukan hasil bitwise mentah
-    const is_ps4 = (value >= 0x1250 && value < 0x1252); // contoh range PS4
+    const is_ps4 = (value >= 0x600 && value < 0x1300); // contoh range PS4
     const version = value;
 
     // tentukan rentang versi sesuai platform
     const [lower, upper] = is_ps4
-        ? [0x1250, 0x1252] // PS4: 6.00 - 10.00
+        ? [0x600, 0x1300] // PS4: 6.00 - 13.00
         : [0x1000, 0x1600]; // PS5: 1.00 - 6.00 (contoh)
 
     if (!(lower <= version && version <= upper)) {
@@ -122,7 +122,7 @@ const AIO_CMD_FLAG_MULTI = 0x1000;
 const AIO_CMD_MULTI_READ = AIO_CMD_FLAG_MULTI | AIO_CMD_READ;
 const AIO_STATE_COMPLETE = 3;
 const AIO_STATE_ABORTED = 4;
-const num_workers = 2;
+const num_workers = 5;
 // max number of requests that can be created/polled/canceled/deleted/waited
 const max_aio_ids = 0x80;
 
