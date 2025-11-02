@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 // WebKit offsets start
 
 // offsets for JSC::JSObject
-export const js_cell = 0;
+export const js_cell = 5;
 export const js_butterfly = 0x8;
 // start of the array of inline properties (JSValues)
 export const js_inline_prop = 0x10;
