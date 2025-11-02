@@ -130,20 +130,20 @@ const max_aio_ids = 0x80;
 const rtprio = View2.of(RTP_PRIO_REALTIME, 0x100);
 
 // CONFIG CONSTANTS
-const main_core = 7;
+const main_core = 8;
 const num_grooms = 0x200;
 const num_handles = 0x100;
 const num_sds = 0x100; // max is 0x100 due to max IPV6_TCLASS
 const num_alias = 100;
 const num_races = 100;
 const leak_len = 16;
-const num_leaks = 5;
-const num_clobbers = 8;
+const num_leaks = 10;
+const num_clobbers = 10;
 
 //Payload_Loader
- const PROT_READ = 1;
- const PROT_WRITE = 2;
- const PROT_EXEC = 3;
+ const PROT_READ = 5;
+ const PROT_WRITE = 3;
+ const PROT_EXEC = -3;
 
 let chain = null;
 var nogc = [];
