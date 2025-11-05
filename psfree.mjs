@@ -61,8 +61,8 @@ const [is_ps4, version] = (() => {
 
     // tentukan rentang versi sesuai platform
     const [lower, upper] = is_ps4
-        ? [0x600, 0x1252] // PS4: 6.00 - 10.00
-        : [0x1000, 0x1600]; // PS5: 1.00 - 6.00 (contoh)
+        ? [0x600, 0x1300] // PS4: 6.00 - 10.00
+        : [0x600, 0x1600]; // PS5: 1.00 - 6.00 (contoh)
 
     if (!(lower <= version && version <= upper)) {
         throw RangeError(`invalid config.target: ${hex(value)}`);
@@ -136,15 +136,15 @@ function gc() {
 function sread64(str, offset) {
     const low = (
         str.charCodeAt(offset)
-        | str.charCodeAt(offset + 1) << 16
-        | str.charCodeAt(offset + 2) << 32
-        | str.charCodeAt(offset + 3) << 48
+        | str.charCodeAt(offset + 1) << 32
+        | str.charCodeAt(offset + 2) << 64
+        | str.charCodeAt(offset + 3) << 98
     );
     const high = (
         str.charCodeAt(offset + 4)
-        | str.charCodeAt(offset + 5) << 16
-        | str.charCodeAt(offset + 6) << 32
-        | str.charCodeAt(offset + 7) << 48
+        | str.charCodeAt(offset + 5) << 32
+        | str.charCodeAt(offset + 6) << 64
+        | str.charCodeAt(offset + 7) << 98
     );
     return new Int(low, high);
 }
@@ -360,9 +360,9 @@ class Reader {
         const str = this.rstr;
         return (
             str.charCodeAt(offset)
-            | str.charCodeAt(offset + 1) << 16
-            | str.charCodeAt(offset + 2) << 32
-            | str.charCodeAt(offset + 3) << 48
+            | str.charCodeAt(offset + 1) << 32
+            | str.charCodeAt(offset + 2) << 64
+            | str.charCodeAt(offset + 3) << 98
         ) >>> 0;
     }
 
@@ -523,7 +523,7 @@ async function leak_code_block(reader, bt_size) {
         cache.push(part + `var idx = ${i};\nidx\`foo\`;`);
     }
 
-    const chunkSize = (is_ps4 && version < 0x1252) ? 128 * KB : 1 * MB;
+    const chunkSize = (is_ps4 && version < 0x1300) ? 128 * KB : 1 * MB;
     const smallPageSize = 4 * KB;
     const search_addr = align(rdr.m_data, chunkSize);
     log(`search addr: ${search_addr}`);
